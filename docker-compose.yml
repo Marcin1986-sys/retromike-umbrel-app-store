@@ -4,7 +4,7 @@ services:
 
   app_proxy:
     environment:
-      APP_HOST: retro-mike-xmr-node_web_1
+      APP_HOST: retro-mike-doge-node_web_1
       APP_PORT: 8080
   web:
     image: amir20/dozzle:v8.12.8@sha256:8ff3115c9c9dd7576839df6f2575de345ca7cafa398cf2496f1f19c31d862ac1
@@ -14,13 +14,13 @@ services:
     depends_on:
       - node
   node:
-    image: theretromike/nodes:monero
+    image: theretromike/nodes:dogecoin
     restart: on-failure
     stop_grace_period: 1m
     volumes:
-      - ${APP_DATA_DIR}/.monero:/root/.bitmonero
+      - ${APP_DATA_DIR}/.dogecoin:/root/.dogecoin
     ports:
-      - 9009:9009    # RPC
-      - 7009:7009    # ZMQ
-      - 18080:18080    # P2P
-    entrypoint: "monerod --non-interactive --confirm-external-bind --out-peers 32 --p2p-bind-ip=0.0.0.0 --p2p-bind-port=18080 --rpc-bind-ip=0.0.0.0 --rpc-bind-port=9009 --prune-blockchain --zmq-pub=tcp://127.0.0.1:7009"
+      - 9003:9003    # RPC
+      - 7003:7003    # ZMQ
+      - 22556:22556  # P2P
+    entrypoint: "dogecoind -printtoconsole -server -prune=2200 -wallet=default -zmqpubhashblock=tcp://127.0.0.1:7003 -rpcbind=0.0.0.0 -rpcport=9003 -rpcallowip=0.0.0.0/0 -rpcuser=pooluser -rpcpassword=poolpassword"
